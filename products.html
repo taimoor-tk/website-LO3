@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - Fresh Grocery</title>
+    <link rel="stylesheet" href="products.css">
+</head>
+<body>
+    <!-- Navigation Bar with Cart -->
+    <nav class="navbar">
+        <h1>🌿 Fresh Grocery</h1>
+        <div class="button-group">
+            <a href="about.html" class="nav-button">About</a>
+            <a href="cart.html" class="nav-button">🛒 Cart (<span id="cartCount">0</span>)</a>
+            <button onclick="logout()" class="remove-button">Logout</button>
+        </div>
+    </nav>
+
+    <!-- Product Search Bar -->
+    <div class="search-section">
+        <div class="search-container">
+            <input type="search"
+                   id="searchInput"
+                   placeholder="Search products..."
+                   class="search-input">
+        </div>
+    </div>
+
+    <!-- Category Filters -->
+    <div class="category-section">
+        <div class="container">
+            <div class="category-filters" id="categoryButtons"></div>
+        </div>
+    </div>
+
+    <!-- Products Grid -->
+    <main class="products-section">
+        <div class="container">
+            <div class="products-grid" id="productsGrid"></div>
+        </div>
+    </main>
+
+    <script src="products.js"></script>
+    <script>
+        // Check authentication
+        if (!localStorage.getItem('currentUser')) {
+            window.location.href = 'login.html';
+        }
+
+        // Initialize categories
+        function initializeCategories() {
+            const categories = [...new Set(products.map(p => p.category))];
+            const buttonContainer = document.getElementById('categoryButtons');
+
+            // Create the "All Items" button
+            const allButton = document.createElement('button');
+            allButton.className = 'category-btn active';
+            allButton.setAttribute('data-category', 'all');
+            allButton.textContent = 'All Items';
+            allButton.onclick = () => {
+                // Reset the search input value
+                document.getElementById('searchInput').value = '';
+
+                // Display all products
+                displayProducts();
+
+                // Update the active state of the category buttons
+                document.querySelectorAll('.category-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn === allButton);
+                });
+            };
+            buttonContainer.appendChild(allButton);
+
+            // Create buttons for each category
+            categories.forEach(category => {
+                const button = document.createElement('button');
+                button.className = 'category-btn';
+                button.setAttribute('data-category', category);
+                button.textContent = category;
+                button.onclick = () => {
+                    // Reset the search input value
+                    document.getElementById('searchInput').value = '';
+
+                    // Filter products based on the selected category
+                    filterProducts(category);
+                };
+                buttonContainer.appendChild(button);
+            });
+        }
+
+        // Display products in grid
+        function displayProducts(productsToShow = products) {
+            const grid = document.getElementById('productsGrid');
+
+            grid.innerHTML = productsToShow.map(product => `
+                    <div class="product-card">
+                        <img
+                            src="${product.image}"
+                            alt="${product.name}"
+                            class="product-image"
+                            onerror="this.src='placeholder.jpg'"
+                        >
+                        <div class="product-details">
+                            <h3 class="product-name">${product.name}</h3>
+                            <p class="product-description">${product.description}</p>
+                            <p class="product-price">$${product.price.toFixed(2)}</p>
+                            <p class="product-weight">${product.weight || product.volume || product.quantity}</p>
+                            <button
+                                class="add-to-cart"
+                                onclick="addToCart(${product.id})"
+                            >
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        // Cart functionality
+        function addToCart(productId) {
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const product = products.find(p => p.id === productId);
+
+            if (product) {
+                cart.push(product);
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartCount();
+
+                // Show success feedback
+                const button = event.target;
+                button.textContent = '✓ Added!';
+                button.style.backgroundColor = '#45a049';
+                setTimeout(() => {
+                    button.textContent = 'Add to Cart';
+                    button.style.backgroundColor = '';
+                }, 1000);
+            }
+        }
+
+        // Update cart count in navigation
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            document.getElementById('cartCount').textContent = cart.length;
+        }
+
+        // Logout functionality
+        function logout() {
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('cart');
+            window.location.href = 'login.html';
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeCategories();
+            displayProducts();
+            updateCartCount();
+        });
+    </script>
+</body>
+</html>

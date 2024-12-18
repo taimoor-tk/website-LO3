@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Fresh Grocery</title>
+    <style>
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+
+        /* Navigation bar - matches other pages */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .navbar h1 {
+            color: #2c3e50;
+            font-size: 1.5rem;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .nav-button {
+            background: #3498db;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .remove-button {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        /* About page content styles */
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .hero-section {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .hero-section h2 {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .tagline {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background: #f8fafc;
+            padding: 25px;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .feature-card h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            color: #7f8c8d;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <h1>🌿 Fresh Grocery</h1>
+        <div class="button-group">
+            <a href="products.html" class="nav-button">Products</a>
+            <a href="cart.html" class="nav-button">🛒 Cart</a>
+            <button onclick="logout()" class="remove-button">Logout</button>
+        </div>
+    </nav>
+
+    <!-- About Content -->
+    <div class="container">
+        <div class="hero-section">
+            <h2>About Fresh Grocery</h2>
+            <p class="tagline">Your Trusted Source for Fresh Products</p>
+            
+            <div class="features">
+                <div class="feature-card">
+                    <h3>Our Mission</h3>
+                    <p>To provide fresh, high-quality groceries at affordable prices, ensuring every customer has access to healthy food options.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Quality Promise</h3>
+                    <p>We carefully select and verify all our products for freshness, working directly with local farmers and suppliers.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Customer Service</h3>
+                    <p>24/7 support to ensure your shopping experience is perfect. Your satisfaction is our top priority.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Authentication check
+        if (!localStorage.getItem('currentUser')) {
+            window.location.href = 'login.html';
+        }
+
+        // Logout functionality
+        function logout() {
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('cart');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>
